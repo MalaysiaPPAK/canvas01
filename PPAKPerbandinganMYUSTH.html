@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Kos Pengeluaran Ayam Pedaging: Malaysia vs. USA vs. Thailand</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 380px;
+            }
+        }
+        .kpi-value {
+            font-weight: 900;
+            color: #0077B6;
+        }
+        .kpi-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .section-title {
+            font-weight: 700;
+            font-size: 2.25rem;
+            line-height: 2.5rem;
+            letter-spacing: -0.025em;
+        }
+        .section-subtitle {
+             font-size: 1.125rem;
+             line-height: 1.75rem;
+             color: #495057;
+        }
+        .flow-arrow {
+            font-size: 2rem;
+            color: #ADB5BD;
+            margin: 0.5rem 0;
+            line-height: 1;
+        }
+        .country-flag {
+            width: 3rem;
+            height: 2rem;
+            object-fit: cover;
+            border-radius: 0.25rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3">
+            <div class="flex items-center justify-between">
+                <div class="text-xl font-semibold text-gray-700">
+                    Analisis Kos Ayam Pedaging
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#overview" class="text-gray-600 hover:text-blue-600">Gambaran Keseluruhan</a>
+                    <a href="#malaysia" class="text-gray-600 hover:text-blue-600">Malaysia</a>
+                    <a href="#usa" class="text-gray-600 hover:text-blue-600">USA</a>
+                    <a href="#thailand" class="text-gray-600 hover:text-blue-600">Thailand</a>
+                    <a href="#comparison" class="text-gray-600 hover:text-blue-600">Perbandingan</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section class="text-center mb-12">
+            <img src="images/logoPPAK.jpg" alt="Logo PPAK" class="mx-auto mb-4 w-24 h-24 object-contain">
+            <h1 class="text-2xl md:text-3xl font-black text-gray-800 leading-tight">
+                PERSATUAN PENTERNAK AYAM KEBANGSAAN (PPM-023-10-14092023)
+            </h1>
+            <h1 class="text-4xl md:text-6xl font-black text-gray-800 leading-tight mt-6">
+                Pengeluaran Ayam Pedaging Global:<br>Analisis Kos Mendalam
+            </h1>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600">
+                Analisis pemacu ekonomi utama, anjakan dasar, dan cabaran strategik yang membentuk industri ayam pedaging di Malaysia, USA, dan Thailand dari 2023-2025.
+            </p>
+        </section>
+
+        <section id="overview" class="mb-24 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="section-title">Pemalar Universal: Kos Makanan</h2>
+                <p class="section-subtitle max-w-2xl mx-auto">Di semua pasaran, makanan adalah perbelanjaan terbesar, menjadikan pengeluar sangat terdedah kepada turun naik harga komoditi global.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="kpi-card text-center p-8">
+                    <div class="text-7xl lg:text-8xl font-black text-[#FF8C00]">60-75%</div>
+                    <div class="mt-2 text-2xl font-semibold text-gray-700">daripada Jumlah Kos Pengeluaran</div>
+                    <p class="mt-4 text-gray-600">Dominasi ini menyerlahkan kepentingan kritikal kecekapan penukaran makanan dan perolehan bahan secara strategik untuk mengekalkan keuntungan dalam industri ayam pedaging.</p>
+                </div>
+                <div>
+                     <div class="chart-container">
+                        <canvas id="universalCostChart"></canvas>
+                    </div>
+                    <p class="text-center mt-4 text-sm text-gray-500">Komposisi kos tipikal dalam pengeluaran ayam pedaging.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="malaysia" class="mb-24 py-12 bg-white rounded-2xl shadow-lg scroll-mt-20">
+            <div class="px-6 md:px-12">
+                <div class="flex items-center gap-4 mb-6">
+                     <img src="https://placehold.co/48x32/FF0000/FFFFFF?text=MY" class="country-flag" alt="Bendera Malaysia">
+                    <h2 class="section-title">Malaysia: Menavigasi Era Pasca-Subsidi</h2>
+                </div>
+                <p class="section-subtitle mb-12">Kebergantungan yang tinggi kepada makanan import dan perubahan dasar utama baru-baru ini memaksa industri untuk memodenkan diri dengan pantas dan mencari kecekapan baharu.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="kpi-card text-center"><span class="text-4xl kpi-value">RM6.48</span><p class="mt-1 text-gray-600">Kos per kg (2024)</p></div>
+                    <div class="kpi-card text-center"><span class="text-4xl kpi-value">~16%</span><p class="mt-1 text-gray-600">Perkongsian DOC daripada Kos</p></div>
+                    <div class="kpi-card text-center"><span class="text-4xl kpi-value">30%</span><p class="mt-1 text-gray-600">Pengurangan Kos Buruh melalui CHS</p></div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
+                    <div class="lg:col-span-3">
+                        <div class="chart-container">
+                            <canvas id="malaysiaCostChart"></canvas>
+                        </div>
+                         <p class="text-center mt-4 text-sm text-gray-500">Pecahan kos dalam industri ayam pedaging Malaysia (data 2022-2024).</p>
+                    </div>
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="kpi-card">
+                            <h4 class="font-bold text-lg text-gray-800">Pivot Dasar: Penarikan Subsidi</h4>
+                            <p class="text-gray-600 mt-2">Berkuat kuasa <span class="font-semibold">1 Nov 2023</span>, kerajaan menghentikan subsidi ayam, mendedahkan pengeluar kepada ketidakstabilan pasaran penuh dan mewujudkan tekanan untuk meningkatkan kecekapan operasi.</p>
+                        </div>
+                        <div class="kpi-card">
+                             <h4 class="font-bold text-lg text-gray-800">Keperluan Automasi</h4>
+                            <p class="text-gray-600 mt-2">Pelaburan dalam Sistem Reban Tertutup (CHS) semakin pesat. Walaupun memerlukan modal yang tinggi, CHS meningkatkan penukaran makanan dan mengurangkan kematian, menyediakan penampan penting terhadap kos import dan mata wang yang tidak menentu.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="usa" class="mb-24 py-12 bg-white rounded-2xl shadow-lg scroll-mt-20">
+             <div class="px-6 md:px-12">
+                <div class="flex items-center gap-4 mb-6">
+                    <img src="https://placehold.co/48x32/002868/FFFFFF?text=US" class="country-flag" alt="Bendera USA">
+                    <h2 class="section-title">USA: Kecekapan, Skala, dan Risiko Sistemik</h2>
+                </div>
+                <p class="section-subtitle mb-12">Peneraju global yang ditakrifkan oleh integrasi menegak dan sumber makanan domestik, kini menghadapi halangan modal yang tinggi dan ancaman penyakit yang berterusan.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="kpi-card text-center"><span class="text-4xl kpi-value">RM3.40</span><p class="mt-1 text-gray-600">Kos per kg (2024)</p></div>
+                    <div class="kpi-card text-center"><span class="text-4xl kpi-value">1.69</span><p class="mt-1 text-gray-600">FCR yang Diperbaiki (2024)</p></div>
+                    <div class="kpi-card text-center"><span class="text-4xl kpi-value">RM25.5J+</span><p class="mt-1 text-gray-600">Kos untuk Ladang 8 Reban Baharu</p></div>
+                </div>
+
+                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                    <div>
+                        <h3 class="font-bold text-xl text-gray-800 text-center mb-4">Cabaran 1: Kos Modal yang Melarang</h3>
+                        <p class="text-center text-gray-600 mb-4">Kos kemudahan baharu yang sangat tinggi mengukuhkan dominasi model pertanian kontrak dan meningkatkan halangan kemasukan, mendorong penyatuan industri.</p>
+                        <div class="chart-container" style="height: 300px;">
+                            <canvas id="usaHousingCostChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-xl text-gray-800 text-center mb-4">Cabaran 2: Penyakit & Anjakan Dasar</h3>
+                         <div class="space-y-6">
+                            <div class="kpi-card">
+                                <h4 class="font-bold text-lg text-gray-800">Wabak HPAI</h4>
+                                <p class="text-gray-600 mt-2">Influenza Avian Patogenik Tinggi adalah pengganggu ekonomi yang berulang, mengekang pengeluaran dan mewujudkan ketidakstabilan pasaran yang signifikan serta kos biosekuriti yang tertanam.</p>
+                            </div>
+                            <div class="kpi-card">
+                                <h4 class="font-bold text-lg text-gray-800">Pembaharuan Pembayaran Penternak</h4>
+                                <p class="text-gray-600 mt-2">Peraturan USDA baharu (Jan 2025) melarang pengurangan bayaran asas penternak kontrak dalam sistem "kejohanan", mengalihkan beberapa risiko kewangan daripada penternak individu kembali kepada integrator besar.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="thailand" class="mb-24 py-12 bg-white rounded-2xl shadow-lg scroll-mt-20">
+             <div class="px-6 md:px-12">
+                <div class="flex items-center gap-4 mb-6">
+                    <img src="https://placehold.co/48x32/00247d/FFFFFF?text=TH" class="country-flag" alt="Bendera Thailand">
+                    <h2 class="section-title">Thailand: Kuasa Eksport Berasaskan Kecekapan</h2>
+                </div>
+                <p class="section-subtitle mb-12">Memanfaatkan kos buruh yang lebih rendah dan tumpuan strategik terhadap kecekapan operasi untuk mengekalkan kelebihan daya saing dalam pasaran ayam proses global.</p>
+                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="kpi-card text-center"><span class="text-4xl kpi-value">~60%</span><p class="mt-1 text-gray-600">Perkongsian Makanan daripada Kos</p></div>
+                    <div class="kpi-card text-center"><span class="text-4xl kpi-value">RM0.55</span><p class="mt-1 text-gray-600">Purata Kos Buruh per Ekor/Pusingan</p></div>
+                    <div class="kpi-card text-center"><span class="text-4xl kpi-value">40</span><p class="mt-1 text-gray-600">Tempoh Pembesaran Sasaran (Hari)</p></div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="font-bold text-xl text-gray-800 text-center mb-4">Tindak Balas Strategik terhadap Tekanan Kos</h3>
+                        <p class="text-center text-gray-600 mb-6">Thailand mengatasi kebergantungannya kepada makanan import dengan gigih mengejar kecekapan dalaman.</p>
+                         <div class="flex flex-col items-center text-center">
+                            <div class="kpi-card w-full max-w-sm">
+                                <h4 class="font-bold">Kos Buruh yang Lebih Rendah</h4>
+                                <p class="text-sm text-gray-600">Kelebihan struktur yang signifikan berbanding pengeluar Barat.</p>
+                            </div>
+                            <div class="flow-arrow">+</div>
+                             <div class="kpi-card w-full max-w-sm">
+                                <h4 class="font-bold">Tempoh Pembesaran yang Lebih Pendek</h4>
+                                <p class="text-sm text-gray-600">Mengurangkan kitaran dari 45 kepada 40 hari mengurangkan jumlah penggunaan makanan.</p>
+                            </div>
+                            <div class="flow-arrow">=&gt;</div>
+                             <div class="kpi-card w-full max-w-sm bg-blue-100 border border-blue-300">
+                                <h4 class="font-bold text-blue-800">Daya Saing yang Dipertingkatkan</h4>
+                                <p class="text-sm text-blue-700">Strategi-strategi ini membantu mengekalkan margin keuntungan dan mengukuhkan kedudukannya sebagai pengeksport global terkemuka.</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div>
+                         <div class="chart-container">
+                            <canvas id="thailandCostChart"></canvas>
+                        </div>
+                         <p class="text-center mt-4 text-sm text-gray-500">Pecahan kos dalam industri ayam pedaging Thailand (data 2018 & 2024).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="comparison" class="mb-24 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="section-title">Analisis Perbandingan</h2>
+                <p class="section-subtitle max-w-2xl mx-auto">Menggambarkan struktur kos dan kedudukan strategik yang berbeza bagi ketiga-tiga negara.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                     <h3 class="font-bold text-xl text-gray-800 text-center mb-4">Pecahan Komponen Kos (%)</h3>
+                    <div class="chart-container">
+                        <canvas id="comparisonStackedBarChart"></canvas>
+                    </div>
+                </div>
+                 <div>
+                    <h3 class="font-bold text-xl text-gray-800 text-center mb-4">Perbandingan Profil Strategik</h3>
+                     <div class="chart-container">
+                        <canvas id="comparisonRadarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-12 items-center mt-12">
+                <div>
+                    <h3 class="font-bold text-xl text-gray-800 text-center mb-4">Perbandingan Kos per Kg (RM)</h3>
+                    <p class="text-center text-gray-600 mb-6">Carta ini menunjukkan perbandingan kos mutlak (dalam RM per kg) untuk komponen utama pengeluaran ayam pedaging di Malaysia, USA, dan Thailand, menyerlahkan perbezaan dalam setiap kategori kos.</p>
+                    <div class="chart-container" style="height: 450px; max-height: 500px;">
+                        <canvas id="comparisonBarChartMYR"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+         <footer class="border-t pt-8 mt-12">
+            <h3 class="font-bold text-xl text-gray-800 mb-4">Rujukan</h3>
+            <div class="text-xs text-gray-500 space-y-2">
+                <p>[1] AgMRC. (2023). Broiler Production. [2] WattAgNet. (2023). Poultry production costs. [3] The Malaysian Reserve. (2024). Chicken price to remain stable on lower feed costs. [4] Focus Malaysia. (2023). Poultry players may be running out of steam to absorb rising operational costs. [5] The Poultry Site. (2024). Thai broiler producers enjoy lower feed costs, higher profits. [6] Niche Meat Processor Assistance Network. (2023). Poultry Processing Costs. [7] Selina Wamucii. (2025). Malaysia Chicken Meat Prices. [8] Cornell Small Farms Program. (2023). Poultry Processing Services. [9] University of Kentucky. (2021). Costs of On-Farm Poultry Processing. [10] Selina Wamucii. (2025). Thailand Chicken Meat Prices. [11] Mordor Intelligence. (2024). Malaysia Chicken Meat Market. [12] Department of Statistics Malaysia. (2022). Broiler Chicken Production Cost. [13] Journal of Agribusiness Marketing. (2024). Cost-Benefit Analysis of Adopting Closed House System. [14] Free Malaysia Today. (2024). Farm prices of chicken drop, says DVS. [15] Department of Statistics Malaysia. (2023). Labour Market Review. [16] Livi Machinery. (2024). Steel Structure Poultry House Cost. [17] TNB. (2025). Electricity Tariff. [18] The Star. (2024). Electricity tariffs for domestic users in Peninsular Malaysia maintained. [19] Prime Minister's Office of Malaysia. (2023). Termination of Bulk Subsidies. [20] Channel News Asia. (2023). Malaysia to end chicken subsidies. [21] The Edge Malaysia. (2024). Chicken, egg producers face margin pressure. [22] USDA ERS. (2024). Poultry & Eggs. [23] USDA AMS. (2024). Poultry Grower Payment Systems and Capital Improvement Systems. [24] National Chicken Council. (2024). U.S. Broiler Market. [25] USDA. (2024). Poultry - Production and Value. [26] Statista. (2024). Broiler production in the U.S. [27] WattAgNet. (2024). US broiler production to rise. [28] National Chicken Council. (2024). Feed Conversion Ratio. [29] Farm Journal. (2024). Poultry Outlook. [30] Iowa State University. (2025). Corn and Soybean Price Prospects. [31] Meyer Hatchery. (2024). Cornish Cross Broiler Chicks. [32] Cackle Hatchery. (2024). Jumbo Cornish Cross. [33] American Farm Bureau Federation. (2024). Farm Labor Costs Skyrocket. [34] National Chicken Council. (2021). Median Grower Payments. [35] WattAgNet. (2023). Cost to build a new broiler house. [36] University of Georgia. (2000). Poultry Housing Costs. [37] USDA ERS. (2023). U.S. farm sector energy expenditures. [38] ACEEE. (2022). Opportunities for Energy Efficiency in Poultry Houses. [39] The Featherbrain. (2024). Chicken Vet Costs. [40] GRIT. (2024). Chicken Health Care Costs. [41] The Poultry Site. (2018). Economic cost of necrotic enteritis. [42] Clemson University. (2024). Veterinary Diagnostic Center Fees. [43] Iowa State University. (2024). VDL Test and Fee Schedule. [44] Reuters. (2024). US faces egg, poultry shortages. [45] CoBank. (2024). Quarterly U.S. Rural Economic Review. [46] King's AgriSeeds. (2023). Poultry Processing Fees. [47] This Old Farm. (2024). Custom Poultry Processing. [48] Federal Register. (2024). Transparency in Poultry Grower Contracting and Tournaments. [49] Kasetsart Journal of Social Sciences. (2021). The Thai poultry sector. [50] The Nation Thailand. (2024). CPF, GFPT shares soar. [51] Food and Fertilizer Technology Center. (2022). Thai Poultry Industry. [52] USDA FAS. (2018). Thailand Poultry Production. [53] GFPT. (2024). Financial Statements. [54] USDA FAS. (2024). Thailand Poultry and Products Annual. [55] Reuters. (2024). Thailand's GFPT expects higher 2024 earnings. [56] Frontiers in Veterinary Science. (2022). Sustainability of the Thai Broiler Industry. [57] Alibaba. (2024). Feed Prices. [58] The Poultry Site. (2024). Day-old chick prices. [59] The Poultry Site. (2024). Thailand develops new chicken breed. [60] WattAgNet. (2019). Thai broiler production model. [61] ResearchGate. (2020). Contract Farming in Thailand. [62] Thai PBS World. (2025). Minimum wage increase. [63] Made-in-China. (2024). Steel Structure Poultry House. [64] FazWaz. (2024). Farm for sale. [65] The Poultry Site. (2021). Energy saving tips. [66] Straits Research. (2023). Thailand Veterinary Services Market. [67] The Poultry Site. (2023). Thai Union Nutrition for broilers.</p>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chartTooltip = {
+                enabled: true,
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) {
+                            return label.join(' ');
+                        }
+                        return label;
+                    }
+                }
+            };
+
+            function wrapLabels(label, maxLength) {
+                if (typeof label !== 'string' || label.length <= maxLength) {
+                    return label;
+                }
+                const words = label.split(' ');
+                let lines = [];
+                let currentLine = '';
+                words.forEach(word => {
+                    if ((currentLine + word).length > maxLength && currentLine.length > 0) {
+                        lines.push(currentLine);
+                        currentLine = word;
+                    } else {
+                        currentLine += (currentLine ? ' ' : '') + word;
+                    }
+                });
+                lines.push(currentLine);
+                return lines;
+            }
+            
+            const palette = {
+                blue: '#0077B6',
+                cyan: '#00B4D8',
+                orange: '#FF8C00',
+                gray: '#ADB5BD',
+                darkBlue: '#023E8A',
+                lightCyan: '#CAF0F8'
+            };
+
+            new Chart(document.getElementById('universalCostChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Makanan', 'Anak Ayam Sehari', 'Buruh', 'Perumahan & Peralatan', 'Veterinar & Kesihatan', 'Utiliti & Lain-lain'],
+                    datasets: [{
+                        label: 'Perkadaran Kos',
+                        data: [68, 16, 5, 4, 3, 4],
+                        backgroundColor: [palette.blue, palette.cyan, palette.orange, palette.gray, palette.darkBlue, palette.lightCyan],
+                        borderColor: '#f8f9fa',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: chartTooltip
+                    }
+                }
+            });
+            
+            new Chart(document.getElementById('malaysiaCostChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Kos Makanan', 'Anak Ayam Sehari (DOC)', 'Perumahan & Peralatan', 'Kos Buruh', 'Lain-lain'],
+                    datasets: [{
+                        data: [65.1, 16.0, 2.45, 1.75, 14.7],
+                        backgroundColor: [palette.orange, palette.cyan, palette.gray, palette.darkBlue, palette.lightCyan],
+                        borderColor: '#ffffff',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: chartTooltip
+                    }
+                }
+            });
+            
+            new Chart(document.getElementById('usaHousingCostChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['1999 (RM285.90/meter persegi)', '2023 (rendah) (RM823.94/meter persegi)', '2023 (tinggi) (RM1006.40/meter persegi)'],
+                    datasets: [{
+                        label: 'Kos per meter persegi (RM)',
+                        data: [285.90, 823.94, 1006.40],
+                        backgroundColor: [palette.gray, palette.blue, palette.darkBlue],
+                        borderColor: [palette.gray, palette.blue, palette.darkBlue],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                       x: { beginAtZero: true }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: chartTooltip
+                    }
+                }
+            });
+
+            new Chart(document.getElementById('thailandCostChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Kos Makanan', 'Anak Ayam Sehari (DOC)', 'Kos Buruh', 'Veterinar & Kesihatan', 'Lain-lain'],
+                     datasets: [{
+                        data: [62.8, 17.1, 14.3, 5.7, 0.1],
+                        backgroundColor: [palette.cyan, palette.orange, palette.blue, palette.darkBlue, palette.gray],
+                        borderColor: '#ffffff',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: chartTooltip,
+                        title: { display: true, text: 'Berdasarkan struktur kos RM4.55/kg 2018' }
+                    }
+                }
+            });
+
+            new Chart(document.getElementById('comparisonStackedBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Malaysia', 'USA (Anggaran)', 'Thailand'],
+                    datasets: [
+                        { label: 'Makanan', data: [65.1, 60, 62.8], backgroundColor: palette.blue },
+                        { label: 'DOC', data: [16, 12, 17.1], backgroundColor: palette.cyan },
+                        { label: 'Buruh', data: [1.75, 8, 14.3], backgroundColor: palette.orange },
+                        { label: 'Lain-lain', data: [17.15, 20, 5.8], backgroundColor: palette.gray }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true },
+                        y: { stacked: true, beginAtZero: true, max: 100, ticks: { callback: value => value + "%"} }
+                    },
+                    plugins: {
+                        tooltip: chartTooltip,
+                        title: { display: true, text: 'Kos USA adalah perkadaran anggaran untuk perbandingan' }
+                    }
+                }
+            });
+
+            const radarLabels = ['Kelebihan Kos Buruh', 'Halangan Modal', 'Ketidakstabilan Kos Makanan', 'Campur Tangan Kerajaan', 'Fokus Eksport'];
+            new Chart(document.getElementById('comparisonRadarChart'), {
+                type: 'radar',
+                data: {
+                    labels: radarLabels.map(l => wrapLabels(l, 15)),
+                    datasets: [
+                        {
+                            label: 'Malaysia',
+                            data: [7, 6, 9, 5, 4],
+                            fill: true,
+                            backgroundColor: 'rgba(255, 140, 0, 0.2)',
+                            borderColor: 'rgb(255, 140, 0)',
+                            pointBackgroundColor: 'rgb(255, 140, 0)',
+                        },
+                        {
+                            label: 'USA',
+                            data: [2, 9, 6, 4, 7],
+                            fill: true,
+                            backgroundColor: 'rgba(0, 119, 182, 0.2)',
+                            borderColor: 'rgb(0, 119, 182)',
+                            pointBackgroundColor: 'rgb(0, 119, 182)',
+                        },
+                         {
+                            label: 'Thailand',
+                            data: [8, 5, 8, 6, 9],
+                            fill: true,
+                            backgroundColor: 'rgba(0, 180, 216, 0.2)',
+                            borderColor: 'rgb(0, 180, 216)',
+                            pointBackgroundColor: 'rgb(0, 180, 216)',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 10,
+                            pointLabels: {
+                                font: { size: 12 }
+                            }
+                        }
+                    },
+                     plugins: {
+                        tooltip: chartTooltip,
+                        title: { display: true, text: 'Skala 1 (Rendah) hingga 10 (Tinggi)' }
+                    }
+                }
+            });
+
+            // New chart for MYR comparison
+            new Chart(document.getElementById('comparisonBarChartMYR'), {
+                type: 'bar',
+                data: {
+                    labels: ['Makanan', 'Anak Ayam Sehari', 'Buruh', 'Lain-lain'],
+                    datasets: [
+                        {
+                            label: 'Malaysia (RM/kg)',
+                            data: [4.22, 1.04, 0.11, 1.11],
+                            backgroundColor: palette.orange,
+                            borderColor: palette.orange,
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'USA (Anggaran RM/kg)',
+                            data: [2.04, 0.41, 0.27, 0.68],
+                            backgroundColor: palette.blue,
+                            borderColor: palette.blue,
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Thailand (Anggaran RM/kg)',
+                            data: [2.86, 0.78, 0.65, 0.26],
+                            backgroundColor: palette.cyan,
+                            borderColor: palette.cyan,
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            stacked: false,
+                            title: {
+                                display: true,
+                                text: 'Komponen Kos'
+                            }
+                        },
+                        y: {
+                            stacked: false,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Kos (RM/kg)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: chartTooltip,
+                        title: { display: true, text: 'Perbandingan Kos Komponen Utama dalam RM per kg' }
+                    }
+                }
+            });
+
+
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
